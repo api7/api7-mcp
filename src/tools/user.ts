@@ -4,17 +4,19 @@ import { GetRoleByUserIdSchema, GetUserIdByUsernameSchema } from "../types/user.
 
 const setupUserTools = (server: McpServer) => {
   server.tool("get_role_by_user_id", "Get role details by user id", GetRoleByUserIdSchema.shape, async (args) => {
-    return await makeAPIRequest(`/users/${args.id}`, "GET", {}, { pick: "value.roles" });
+    return await makeAPIRequest({url: `/api/users/${args.id}`, method: "GET", options: {
+      pick: "value.roles"
+    }});
   });
 
   server.tool("get_userId_by_username", "Get user id by username", GetUserIdByUsernameSchema.shape, async (args) => {
-    return await makeAPIRequest(`/users?search=${args.username}`, "GET", {}, {
+    return await makeAPIRequest({url: `/api/users?search=${args.username}`, method: "GET", options: {
       handler: (data) => {
         if (data.list) {
           return data.list.map((item: { id: string; name: string, username: string }) => ({ id: item.id, name: item.name, username: item.username }));
         }
       }
-    });
+    }});
   });
 };
 
