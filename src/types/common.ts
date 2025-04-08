@@ -18,105 +18,93 @@ export const PaginationSchema = z.object({
   search: z.string().describe("The search query.").optional(),
 });
 
-const GetPublishedServiceSchema = z
-  .object({
-    service_id: IDSchema.describe("The service ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  })
-  .or(
-    z
-      .object({
-        gateway_group_id: IDSchema.describe("The gateway group ID."),
-      })
-      .merge(PaginationSchema)
-  )
-  .optional();
+const GetPublishedServiceSchema = z.object({
+  service_id: IDSchema.describe("The service ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-const GetServiceTemplateSchema = z
-  .object({
-    service_template_id: IDSchema.describe("The service template ID."),
-  })
-  .or(PaginationSchema)
-  .optional();
+const GetServiceTemplateSchema = z.object({
+  service_template_id: IDSchema.describe("The service template ID.").optional(),
+}).merge(PaginationSchema).optional();
 
-const GetUpstreamSchema = z
-  .object({
-    upstream_id: IDSchema.optional().describe("The upstream ID."),
-    service_id: IDSchema.describe("The service ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  })
-  .optional();
+const GetUpstreamSchema = z.object({
+  upstream_id: IDSchema.optional().describe("The upstream ID."),
+  service_id: IDSchema.describe("The service ID."),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).optional();
 
-const GetRouteSchema = z
-  .object({
-    service_id: IDSchema.optional().describe("The service ID."),
-    route_id: IDSchema.describe("The route ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  })
-  .or(
-    z
-      .object({
-        gateway_group_id: IDSchema.describe("The gateway group ID."),
-      })
-      .merge(PaginationSchema)
-  )
-  .optional();
+const GetRouteSchema = z.object({
+  service_id: IDSchema.describe("The service ID."),
+  route_id: IDSchema.describe("The route ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-const GetStreamRouteSchema = z
-  .object({
-    service_id: IDSchema.optional().describe("The service ID."),
-    route_id: IDSchema.describe("The route ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  })
-  .or(
-    z
-      .object({
-        gateway_group_id: IDSchema.describe("The gateway group ID."),
-      })
-      .merge(PaginationSchema)
-  )
-  .optional();
+const GetStreamRouteSchema = z.object({
+  service_id: IDSchema.describe("The service ID."),
+  route_id: IDSchema.describe("The route ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-  const SecretProviderSchema = z.object({
-    type:z.enum(["vault","kubernetes","aws"]),
-    secret_provider_id: IDSchema.describe("The secret provider ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).or(z.object({
-    type:z.enum(["vault","kubernetes","aws"]),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).merge(PaginationSchema))
-  .optional();
+const SecretProviderSchema = z.object({
+  type: z.enum(["vault", "kubernetes", "aws"]),
+  secret_provider_id: IDSchema.describe("The secret provider ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-  const CertificateSchema = z.object({
-    certificate_id: IDSchema.describe("The certificate ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).or(z.object({
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).merge(PaginationSchema))
-  .optional();
+const CertificateSchema = z.object({
+  certificate_id: IDSchema.describe("The certificate ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-  const ConsumerSchema = z.object({
-    username: z.string().describe("The consumer username."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).or(z.object({
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).merge(PaginationSchema))
-  .optional();
+const ConsumerSchema = z.object({
+  username: z.string().describe("The consumer username.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-  const CredentialSchema = z.object({
-    credential_id: IDSchema.describe("The credential ID."),
-    username: IDSchema.describe("The credential ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).or(z.object({
-    username: IDSchema.describe("The credential ID."),
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).merge(PaginationSchema))
-  .optional();
+const CredentialSchema = z.object({
+  credential_id: IDSchema.describe("The credential ID.").optional(),
+  username: IDSchema.describe("The credential ID."),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
-  const GatewayGroupSchema = z.object({
-    gateway_group_id: IDSchema.describe("The gateway group ID."),
-  }).or(PaginationSchema)
-  .optional();
+const GatewayGroupSchema = z.object({
+  gateway_group_id: IDSchema.describe("The gateway group ID.").optional(),
+}).merge(PaginationSchema).optional();
+
+const CaCertificateSchema = z.object({
+  ca_certificate_id: IDSchema.describe("The CA certificate ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
+
+const SniSchema = z.object({
+  sni_id: IDSchema.describe("The SNI ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
+
+const GlobalRulesSchema = z.object({
+  rule_id: IDSchema.describe("The rule ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
+
+const PluginMetadataSchema = z.object({
+  plugin_name: z.string().describe("The plugin name."),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+  status: z.enum(["Healthy", "OutOfSync", "LostConnection", "Offline"]).describe("The status."),
+}).merge(PaginationSchema).optional();
+
+const GatewayInstanceSchema = z.object({
+  gateway_group_id: IDSchema.describe("The gateway group ID.").optional(),
+}).merge(PaginationSchema).optional();
+
+const ServiceRegistrySchema = z.object({
+  service_registry_id: IDSchema.describe("The service registry ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
+
+const CustomPluginSchema = z.object({
+  custom_plugin_id: IDSchema.describe("The custom plugin ID.").optional(),
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+}).merge(PaginationSchema).optional();
 
 export const GetResourceSchema = z.object({
   publishedService: GetPublishedServiceSchema,
@@ -129,4 +117,11 @@ export const GetResourceSchema = z.object({
   consumer: ConsumerSchema,
   credential: CredentialSchema,
   gatewayGroup: GatewayGroupSchema,
+  caCertificate: CaCertificateSchema,
+  sni: SniSchema,
+  globalRules: GlobalRulesSchema,
+  pluginMetadata: PluginMetadataSchema,
+  gatewayInstance: GatewayInstanceSchema,
+  serviceRegistry: ServiceRegistrySchema,
+  customPlugin: CustomPluginSchema,
 });

@@ -14,6 +14,9 @@ type RequestParams = AxiosRequestConfig<object> & {
   };
 }
 axios.defaults.baseURL = CONTROL_PLANE_ADDRESS
+axios.defaults.headers.common["X-API-KEY"] = TOKEN
+axios.defaults.headers.common["Content-Type"] = "application/json"
+
 async function makeAPIRequest({url, method = "GET", data, options,params}: RequestParams): Promise<CallToolResult> {
 
   try {
@@ -22,10 +25,6 @@ async function makeAPIRequest({url, method = "GET", data, options,params}: Reque
       url,
       data,
       params,
-      headers: {
-        "X-API-KEY": TOKEN,
-        "Content-Type": "application/json",
-      },
     });
 
     let processedData = response.data;

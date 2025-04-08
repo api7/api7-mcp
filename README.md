@@ -53,7 +53,7 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
     "api7-mcp": {
       "command": "node",
       "args": [
-        "your-project-path/build/index.js"
+        "your-project-path/dist/index.js"
       ],
       "env": {
         "CONTROL_PLANE_HOST": "your-api7ee-control-plane-host",
