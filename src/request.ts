@@ -1,28 +1,30 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import _ from "lodash";
 import { CONTROL_PLANE_ADDRESS, TOKEN } from "./env.js";
 
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
-interface RequestOptions {
-  pick?: string;
-  omit?: string;
-  handler?: (data: any) => any;
-}
 
-async function makeAPIRequest(path: string, method: string = "GET", data?: object, options?: RequestOptions): Promise<CallToolResult> {
-  const baseUrl = CONTROL_PLANE_ADDRESS;
-  const url = `${baseUrl}/api${path}`;
+type RequestParams = AxiosRequestConfig<object> & {
+  options?: {
+    pick?: string;
+    omit?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    handler?: (data: any) => any;
+  };
+}
+axios.defaults.baseURL = CONTROL_PLANE_ADDRESS
+axios.defaults.headers.common["X-API-KEY"] = TOKEN
+axios.defaults.headers.common["Content-Type"] = "application/json"
+
+async function makeAPIRequest({url, method = "GET", data, options,params}: RequestParams): Promise<CallToolResult> {
 
   try {
     const response = await axios({
       method,
       url,
       data,
-      headers: {
-        "X-API-KEY": TOKEN,
-        "Content-Type": "application/json",
-      },
+      params,
     });
 
     let processedData = response.data;
