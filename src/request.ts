@@ -1,11 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
 import _ from "lodash";
-import { CONTROL_PLANE_ADDRESS, TOKEN } from "./env.js";
-
+import { CONTROL_PLANE_ADDRESS, TOKEN } from "./env.js";    
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
-
 type RequestParams = AxiosRequestConfig<object> & {
+  raw?: boolean;
   options?: {
     pick?: string;
     omit?: string;
@@ -17,7 +16,14 @@ axios.defaults.baseURL = CONTROL_PLANE_ADDRESS
 axios.defaults.headers.common["X-API-KEY"] = TOKEN
 axios.defaults.headers.common["Content-Type"] = "application/json"
 
-async function makeAPIRequest({url, method = "GET", data, options,params}: RequestParams): Promise<CallToolResult> {
+async function makeAPIRequest({
+  url, 
+  method = "GET", 
+  data, 
+  options, 
+  params, 
+  raw = false
+}: RequestParams) {
 
   try {
     const response = await axios({
@@ -38,7 +44,7 @@ async function makeAPIRequest({url, method = "GET", data, options,params}: Reque
       processedData = options.handler(processedData);
     }
 
-    return {
+    return raw ? processedData : {
       content: [
         {
           type: "text",
@@ -60,7 +66,8 @@ async function makeAPIRequest({url, method = "GET", data, options,params}: Reque
         }
       }
 
-      return {
+
+      return raw ? error : {
         isError: true,
         content: [
           {
@@ -73,9 +80,10 @@ Data:\n${JSON.stringify(error.response?.data || {}, null, 2)}`,
             ),
           },
         ],
-      };
+      } as CallToolResult;
     } else {
-      return {
+      
+      return raw ? error : {
         isError: true,
         content: [
           {

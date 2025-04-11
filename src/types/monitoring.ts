@@ -11,17 +11,12 @@ export const metricTypes = [
 ] as const;
 
 export const timeStepMapping = {
-  '1m': '10s',
-  '5m': '10s',
-  '15m': '15s',
-  '30m': '30s',
-  '1h': '60s',
-  '4h': '4m',
-  '12h': '12m',
-  '1d': '24m',
-  '7d': '2h',
-  '15d': '4h',
-  '30d': '8h',
+  '5m': 15,
+  '30m': 15,
+  '1h': 15,
+  '6h': 84,
+  '12h': 168,
+  '24h': 504,
 } as const;
 
 const metricTypeEnum = z.enum(metricTypes);
@@ -45,3 +40,87 @@ export const prometheusMetricsSchemaObject = z.object(prometheusMetricsSchema);
 export type PrometheusMetricsArgs = z.infer<typeof prometheusMetricsSchemaObject>;
 export type MetricType = typeof metricTypes[number];
 export type TimeStep = keyof typeof timeStepMapping;
+
+
+export type PrometheusValue = [string, string];
+
+// Metric with basic properties
+export type PrometheusMetric =  {
+  [key: string]: string;
+}
+
+// Prometheus result item structure
+export type PrometheusResultItem = {
+  metric: PrometheusMetric;
+  value?: PrometheusValue;
+  values?: PrometheusValue[];
+}
+
+// Prometheus response data structure
+export type PrometheusData = {
+  resultType: string;
+  result: PrometheusResultItem[];
+}
+
+// Complete Prometheus API response
+export type PrometheusResponse = {
+  status: string;
+  data: PrometheusData;
+}
+
+// Formatted metric data structures for different metric types
+export type FormattedStatusDistData = {
+  [key: string]: string;
+}
+
+export type FormattedSingleValueData = {
+  [key: string]: string | number;
+}
+
+export type FormattedTimeSeriesData = {
+  labels: string[];
+  values: number[];
+  summary: {
+    [key: string]: string;
+  };
+}
+
+export type FormattedBandwidthData = {
+  labels: string[];
+  incoming: number[];
+  outgoing: number[];
+  summary: {
+    [key: string]: string;
+  };
+}
+
+export type FormattedMultiSeriesData = {
+  labels: string[];
+  series: Record<string, number[]>;
+  summary: Record<string, string>;
+}
+
+// Processed metric response types
+export type BaseProcessedMetric = {
+  type: string;
+  title?: string;
+  raw: PrometheusResponse;
+}
+
+export type FormattedMetric = BaseProcessedMetric & {
+  type: "formatted";
+  data: FormattedStatusDistData | FormattedSingleValueData | FormattedTimeSeriesData | FormattedBandwidthData | FormattedMultiSeriesData;
+}
+
+export type RawMetric = BaseProcessedMetric & {
+  type: "raw";
+  data: Record<string, unknown>;
+}
+
+export type ErrorMetric = {
+  type: "error";
+  error: string;
+  data: string;
+}
+
+export type ProcessedMetric = FormattedMetric | RawMetric | ErrorMetric; 
