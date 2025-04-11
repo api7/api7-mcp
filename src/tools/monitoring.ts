@@ -4,12 +4,10 @@ import dayjs from "dayjs";
 import { 
   prometheusMetricsSchema, 
   PrometheusMetricsArgs, 
-  timeStepMapping
+  timeStepMapping,
+  PrometheusValue,
+  PrometheusResultItem
 } from "../types/monitoring.js";
-import { 
-  PrometheusResultItem, 
-  PrometheusValue
-} from "../types/prometheus.js";
 
 const calculate_time_range = (raw_time: string) => {
   const now = dayjs();
