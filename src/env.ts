@@ -1,3 +1,3 @@
-export const CONTROL_PLANE_ADDRESS = process.env.CONTROL_PLANE_ADDRESS;
-export const GATEWAY_SERVER_ADDRESS = process.env.GATEWAY_SERVER_ADDRESS;
+export const CONTROL_PLANE_URL = process.env.CONTROL_PLANE_URL;
+export const GATEWAY_SERVER_URL = process.env.GATEWAY_SERVER_URL;
 export const TOKEN = process.env.TOKEN;

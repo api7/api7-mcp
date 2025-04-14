@@ -4,7 +4,7 @@ import makeAPIRequest from "../request.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import axios, { AxiosError } from "axios";
-import { GATEWAY_SERVER_ADDRESS } from "../env.js";
+import { GATEWAY_SERVER_URL } from "../env.js";
 type RequestConfig = z.infer<typeof SendRequestSchema>["requests"][number];
 
 const setupCommonTools = (server: McpServer) => {
@@ -425,7 +425,7 @@ const setupCommonTools = (server: McpServer) => {
     const makeRequest = async (config: RequestConfig) => {
       try {
         const response = await axios.request({
-          url: `${GATEWAY_SERVER_ADDRESS}${config.path}`,
+          url: `${GATEWAY_SERVER_URL}${config.path}`,
           method: config.method,
           data: config.data,
           headers: config.headers,

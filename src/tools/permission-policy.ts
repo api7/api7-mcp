@@ -9,7 +9,7 @@ import {
   AttachPermissionPolicyToRoleSchema,
   DetachPermissionPolicyFromRoleSchema,
 } from "../types/permission-policy.js";
-import { CONTROL_PLANE_ADDRESS } from "../env.js";
+import { CONTROL_PLANE_URL } from "../env.js";
 
 const setupPermissionPolicyTools = (server: McpServer) => {
   server.tool(
@@ -51,7 +51,7 @@ const setupPermissionPolicyTools = (server: McpServer) => {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_ADDRESS}/policies/${data.value.id}`,
+              console_url: `${CONTROL_PLANE_URL}/policies/${data.value.id}`,
             };
           },
         }
@@ -78,7 +78,7 @@ const setupPermissionPolicyTools = (server: McpServer) => {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_ADDRESS}/policies/${data.value.id}`,
+              console_url: `${CONTROL_PLANE_URL}/policies/${data.value.id}`,
             };
           },
         }
@@ -113,7 +113,7 @@ const setupPermissionPolicyTools = (server: McpServer) => {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_ADDRESS}/roles/${args.id}/detail`,
+              console_url: `${CONTROL_PLANE_URL}/roles/${args.id}/detail`,
             };
           },
         }
@@ -130,7 +130,7 @@ const setupPermissionPolicyTools = (server: McpServer) => {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_ADDRESS}/roles/${args.id}/detail`,
+              console_url: `${CONTROL_PLANE_URL}/roles/${args.id}/detail`,
             };
           },
         }

@@ -56,9 +56,7 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
   "mcpServers": {
     "api7-mcp": {
       "command": "node",
-      "args": [
-        "your-project-path/dist/index.js"
-      ],
+      "args": ["your-project-path/dist/index.js"],
       "env": {
         "CONTROL_PLANE_HOST": "your-api7ee-control-plane-host",
         "TOKEN": "your-api7ee-token"
@@ -70,10 +68,11 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
 
 ## Environment Variables
 
-| Variable                  | Description                          |
-| ------------------------- | ------------------------------------ |
-| `CONTROL_PLANE_ADDRESS`   | API7ee control plane server host           |
-| `TOKEN`                   | API7ee Token |
+| Variable             | Description                     |
+| -------------------- | ------------------------------- |
+| `CONTROL_PLANE_URL`  | API7ee control plane server url |
+| `GATEWAY_SERVER_URL` | API7ee data plane server port   |
+| `TOKEN`              | API7ee Token                    |
 
 ## Conversation Examples
 
@@ -81,4 +80,3 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
 - "Modify xiaolin's permissions to prevent viewing and editing consumer credential resources in any gateway group"
 - "Update xiaolin's permissions to only view gateway groups with tags team: R&D and region: shenzhen"
 - "What permissions does xiaolin currently have?"
-

@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import _ from "lodash";
-import { CONTROL_PLANE_ADDRESS, TOKEN } from "./env.js";    
+import { CONTROL_PLANE_URL, TOKEN } from "./env.js";    
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 type RequestParams = AxiosRequestConfig<object> & {
@@ -12,7 +12,7 @@ type RequestParams = AxiosRequestConfig<object> & {
     handler?: (data: any) => any;
   };
 }
-axios.defaults.baseURL = CONTROL_PLANE_ADDRESS
+axios.defaults.baseURL = CONTROL_PLANE_URL
 axios.defaults.headers.common["X-API-KEY"] = TOKEN
 axios.defaults.headers.common["Content-Type"] = "application/json"
 

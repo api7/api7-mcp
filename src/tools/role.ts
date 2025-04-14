@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import makeAPIRequest from "../request.js";
 import { UpdateAssignedRolesForUserSchema, CreateRoleSchema, DeleteRoleSchema, GetRoleSchema } from "../types/role.js";
-import { CONTROL_PLANE_ADDRESS } from "../env.js";
+import { CONTROL_PLANE_URL } from "../env.js";
 
 const setupRoleTools = (server: McpServer) => {
 
@@ -20,7 +20,7 @@ const setupRoleTools = (server: McpServer) => {
       handler: (data) => {
         return {
           ...data,
-          console_url: `${CONTROL_PLANE_ADDRESS}/roles/${data.value.id}`,
+          console_url: `${CONTROL_PLANE_URL}/roles/${data.value.id}`,
         }
       }
     }});
@@ -31,7 +31,7 @@ const setupRoleTools = (server: McpServer) => {
       handler: (data) => {
         return {
           ...data,
-          console_url: `${CONTROL_PLANE_ADDRESS}/users/${args.user_id}`,
+          console_url: `${CONTROL_PLANE_URL}/users/${args.user_id}`,
         }
       }
     }});
