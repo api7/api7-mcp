@@ -23,6 +23,10 @@
 - `get_role_by_user_id`: Get role details by user ID
 - `get_userId_by_username`: Get user ID by username
 
+### Monitoring
+
+- `get_prometheus_metrics`: Get Prometheus metrics from API7 Gateway, including status code distribution, request failures, total requests, bandwidth usage, latency, connections, and QPS
+
 ## Configuration in AI Client
 
 ### Prerequisite
