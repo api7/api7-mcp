@@ -124,3 +124,13 @@ export const GetResourceSchema = z.object({
   serviceRegistry: ServiceRegistrySchema,
   customPlugin: CustomPluginSchema,
 });
+
+export const SendRequestSchema = z.object({
+  requests: z.array(z.object({
+    path: z.string().describe("request path"),
+    method: z.string().describe("request method"),
+    data: z.any().optional().describe("request data"),
+    headers: z.record(z.string(), z.string()).optional().describe("request headers"),
+    repeatCount: z.number().optional().describe("number of requests to send in parallel").default(1),
+  })).describe("array of requests to send in parallel"),
+});

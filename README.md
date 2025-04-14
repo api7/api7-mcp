@@ -2,6 +2,11 @@
 
 ## Supported Operations
 
+### Common Operations
+
+- `get_resource`: Get resource details by ID or list resources based on filters
+- `send_request_to_gateway`: Send a request or multiple requests to the API7ee gateway instance
+
 ### Permission Management
 
 - `get_permission_policy`: Get permission policy details by ID or list permission policies
@@ -22,6 +27,10 @@
 
 - `get_role_by_user_id`: Get role details by user ID
 - `get_userId_by_username`: Get user ID by username
+
+### Monitoring
+
+- `get_prometheus_metrics`: Get Prometheus metrics from API7 Gateway, including status code distribution, request failures, total requests, bandwidth usage, latency, connections, and QPS
 
 ## Configuration in AI Client
 
@@ -52,9 +61,7 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
   "mcpServers": {
     "api7-mcp": {
       "command": "node",
-      "args": [
-        "your-project-path/dist/index.js"
-      ],
+      "args": ["your-project-path/dist/index.js"],
       "env": {
         "CONTROL_PLANE_HOST": "your-api7ee-control-plane-host",
         "TOKEN": "your-api7ee-token"
@@ -66,10 +73,11 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
 
 ## Environment Variables
 
-| Variable                  | Description                          |
-| ------------------------- | ------------------------------------ |
-| `CONTROL_PLANE_ADDRESS`   | API7ee control plane server host           |
-| `TOKEN`                   | API7ee Token |
+| Variable             | Description                     |
+| -------------------- | ------------------------------- |
+| `CONTROL_PLANE_URL`  | API7ee control plane server url |
+| `GATEWAY_SERVER_URL` | API7ee data plane server port   |
+| `TOKEN`              | API7ee Token                    |
 
 ## Conversation Examples
 
@@ -77,4 +85,3 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
 - "Modify xiaolin's permissions to prevent viewing and editing consumer credential resources in any gateway group"
 - "Update xiaolin's permissions to only view gateway groups with tags team: R&D and region: shenzhen"
 - "What permissions does xiaolin currently have?"
-
