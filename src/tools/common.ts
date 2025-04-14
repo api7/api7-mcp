@@ -421,7 +421,7 @@ const setupCommonTools = (server: McpServer) => {
     }
   );
 
-  server.tool("send_request_to_gateway", "Send a request or multiple requests to the APISIX gateway", SendRequestSchema.shape, async (args) => {
+  server.tool("send_request_to_gateway", "Send a request or multiple requests to the API7EE gateway instance", SendRequestSchema.shape, async (args) => {
     const makeRequest = async (config: RequestConfig) => {
       try {
         const response = await axios.request({

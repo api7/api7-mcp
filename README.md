@@ -2,6 +2,11 @@
 
 ## Supported Operations
 
+### Common Operations
+
+- `get_resource`: Get resource details by ID or list resources based on filters
+- `send_request_to_gateway`: Send a request or multiple requests to the API7ee gateway instance
+
 ### Permission Management
 
 - `get_permission_policy`: Get permission policy details by ID or list permission policies
