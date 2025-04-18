@@ -24,6 +24,7 @@ export type Service = {
   name?: string;
   path_prefix?: string;
   hosts?: string[];
+  plugins?: string[];
   routes?: Route[];
   upstream: Upstream;
 }

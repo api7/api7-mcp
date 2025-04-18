@@ -88,11 +88,16 @@ export const fetchResourceOverview = async (): Promise<
         if (servicesData && servicesData.list && servicesData.list.length > 0) {
           const servicePromises = servicesData.list.map(
             async (service: Service) => {
+              const pluginNames = service.plugins
+                    ? Object.keys(service.plugins)
+                    : [];
+
               const serviceInfo: Partial<Service> = {
                 id: service.id,
                 name: service.name,
                 path_prefix: service?.path_prefix || "",
                 hosts: service?.hosts || ["*"],
+                plugins: pluginNames.length > 0 ? pluginNames : undefined,
                 upstream: {
                   name: service.upstream?.name,
                   checks: {

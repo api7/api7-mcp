@@ -1,10 +1,13 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { fetchResourceOverview } from "../utils/risk-check.js";
 
-const prompt = `Here's the translated prompt for invoking the API7-MCP tool to generate a risk assessment report:
----
-
-### Call the tools in API7-MCP to inspect the following risk items and output a final risk report.
+const prompt = `
+**Objective:** Generate a risk report using API7-MCP tools based on the provided Risk Item List.
+**Process:**
+1. **Initial Scan:** Use the provided resource overview to pinpoint resources potentially requiring deeper checks based on the Risk Item List.
+2. **Targeted Fetching:** Call the get_resource tool specifically and **only** for the resources identified in step 1. Avoid fetching unnecessary resource details.
+3. **Complete Analysis:** Employ other relevant API7-MCP tools (e.g., for permissions, metrics) as needed for the Risk Item List.
+4. **Output:** Create the final risk report following the supplied Report Structure.
 
 **Risk Item List:**  
 #### **Security & Authentication**  
@@ -85,18 +88,11 @@ const prompt = `Here's the translated prompt for invoking the API7-MCP tool to g
 │  
 ├── [Risk Item Name]  
 │    ├── **Result**: (✅/⚠️/❌/🔴)  
-│    ├── **Affected Resources**: (Route/service/certificate ID)  
-│    └── **Recommendation**: (Commands/config examples)  
+│    ├── **Affected Resources**
+│    └── **Recommendation**
 │  
 ├── [Risk Item Name]  
 │    └── ...`;
-
-// Guidance for AI analysis
-const overviewGuidance = `
-IMPORTANT INSTRUCTION:
-1. First, analyze the resource overview to identify potential risk areas and problematic resources.
-2. Then use the get_resource tool selectively to fetch detailed information ONLY for resources that need further investigation.
-3. Don't fetch all resources at once - this will cause token limits and reduce analysis quality.`;
 
 const setupRiskCheckTools = (server: McpServer) => {
   server.tool(
@@ -122,11 +118,11 @@ const setupRiskCheckTools = (server: McpServer) => {
         content: [
           {
             type: "text",
-            text: prompt + overviewGuidance,
+            text: prompt ,
           },
           {
             type: "text",
-            text: `${overviewGuidance}\n Resource Overview (Use this for initial assessment):\n${JSON.stringify(
+            text: `\n Resource Overview: \n${JSON.stringify(
               resourceOverview,
               null,
               2
