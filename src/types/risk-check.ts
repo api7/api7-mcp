@@ -1,11 +1,10 @@
-// Resource type definitions
 export type Node = {
-  id: number | string;
+  id: string;
   name: string;
 }
 
 export type Route = {
-  id: number | string;
+  id: string;
   name: string;
   path: string;
   method: string;
@@ -21,33 +20,40 @@ export type Upstream = {
 }
 
 export type Service = {
-  id: number | string;
+  id:   string;
   name?: string;
   routes: Route[];
   upstream: Upstream;
 }
 
 export type GlobalRule = {
-  id: number | string;
+  id:   string;
   name: string;
   plugins: string[];
 }
 
 export type SSL = {
-  id: number | string;
+  id:   string;
   name: string;
   common_name: string;
   exptime: string;
 }
 
+export type Credential = {
+  id: string;
+  name: string;
+  plugin: string;
+}
+
 export type Consumer = {
-  id: number | string;
+  id:   string;
   name: string;
   plugins: string[];
+  credentials?: Credential[];
 }
 
 export type GatewayGroup = {
-  id: number | string;
+  id:   string;
   name: string;
   publishedServices: Service[];
   globalRules: GlobalRule[];
@@ -57,10 +63,10 @@ export type GatewayGroup = {
 
 export type ResourceOverview = {
   gatewayGroups: GatewayGroup[];
-  customPlugins: string[];
+  customPlugins: CustomPlugin[];
 }
 
 export type CustomPlugin = {
-  id: number | string;
+  id:   string;
   name: string;
 }
