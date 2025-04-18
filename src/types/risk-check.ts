@@ -8,7 +8,7 @@ export type Route = {
   name: string;
   path: string;
   method: string;
-  plugins: string[];
+  plugins?: string[];
 }
 
 export type Upstream = {
@@ -22,14 +22,14 @@ export type Upstream = {
 export type Service = {
   id:   string;
   name?: string;
-  routes: Route[];
+  routes?: Route[];
   upstream: Upstream;
 }
 
 export type GlobalRule = {
   id:   string;
   name: string;
-  plugins: string[];
+  plugins?: string[];
 }
 
 export type SSL = {
@@ -48,22 +48,22 @@ export type Credential = {
 export type Consumer = {
   id:   string;
   name: string;
-  plugins: string[];
+  plugins?: string[];
   credentials?: Credential[];
 }
 
 export type GatewayGroup = {
   id:   string;
   name: string;
-  publishedServices: Service[];
-  globalRules: GlobalRule[];
-  ssl: SSL[];
-  consumer: Consumer[];
+  publishedServices?: Service[];
+  globalRules?: GlobalRule[];
+  ssl?: SSL[];
+  consumer?: Consumer[];
 }
 
 export type ResourceOverview = {
-  gatewayGroups: GatewayGroup[];
-  customPlugins: CustomPlugin[];
+  gatewayGroups?: GatewayGroup[];
+  customPlugins?: CustomPlugin[];
 }
 
 export type CustomPlugin = {

@@ -4,7 +4,6 @@ import { ResourceOverview, CustomPlugin, GatewayGroup, Service, Consumer } from 
 
 export const fetchResourceOverview = async (): Promise<ResourceOverview | string> => {
     try {
-      // Fetch custom plugins
       const customPluginsData = await makeAPIRequest({
         url: "/api/custom_plugins",
         raw: true,
@@ -29,20 +28,16 @@ export const fetchResourceOverview = async (): Promise<ResourceOverview | string
   
       if (!gatewayGroupsData) {
         return {
-          gatewayGroups: [],
-          customPlugins: customPlugins,
+          gatewayGroups: customPlugins.length > 0 ? [] : undefined,
+          customPlugins: customPlugins.length > 0 ? customPlugins : undefined,
         };
       }
   
       const gatewayGroupPromises = gatewayGroupsData.list.map(
         async (group: GatewayGroup) => {
-          const gatewayGroup: GatewayGroup = {
+          const gatewayGroup: Partial<GatewayGroup> = {
             id: group.id,
             name: group.name,
-            publishedServices: [],
-            globalRules: [],
-            ssl: [],
-            consumer: [],
           };
   
           const [servicesData, globalRulesData, sslData, consumerData] =
@@ -84,10 +79,10 @@ export const fetchResourceOverview = async (): Promise<ResourceOverview | string
               }),
             ]);
   
-          if (servicesData && servicesData.list) {
+          if (servicesData && servicesData.list && servicesData.list.length > 0) {
             const servicePromises = servicesData.list.map(
               async (service: Service) => {
-                const serviceInfo: Service = {
+                const serviceInfo: Partial<Service> = {
                   id: service.id,
                   name: service.name,
                   upstream: {
@@ -97,7 +92,6 @@ export const fetchResourceOverview = async (): Promise<ResourceOverview | string
                       passive: !!service.upstream?.checks?.passive,
                     },
                   },
-                  routes: [],
                 };
   
                 const routesData = await makeAPIRequest({
@@ -110,19 +104,24 @@ export const fetchResourceOverview = async (): Promise<ResourceOverview | string
                   raw: true,
                 });
   
-                if (routesData && routesData.list) {
+                if (routesData && routesData.list && routesData.list.length > 0) {
+                  const routes = [];
                   for (const route of routesData.list) {
                     const pluginNames = route.plugins
                       ? Object.keys(route.plugins)
                       : [];
   
-                    serviceInfo.routes.push({
+                    routes.push({
                       id: route.id,
                       name: route.name,
                       path: route.uri,
                       method: route.methods,
-                      plugins: pluginNames,
+                      plugins: pluginNames.length > 0 ? pluginNames : undefined,
                     });
+                  }
+                  
+                  if (routes.length > 0) {
+                    serviceInfo.routes = routes;
                   }
                 }
   
@@ -131,46 +130,63 @@ export const fetchResourceOverview = async (): Promise<ResourceOverview | string
             );
   
             const services = await Promise.all(servicePromises);
-            gatewayGroup.publishedServices = services;
+            if (services.length > 0) {
+              gatewayGroup.publishedServices = services;
+            }
           }
   
-          if (globalRulesData && globalRulesData.list) {
+          if (globalRulesData && globalRulesData.list && globalRulesData.list.length > 0) {
+            const globalRules = [];
             for (const rule of globalRulesData.list) {
               const pluginNames = rule.plugins ? Object.keys(rule.plugins) : [];
   
-              gatewayGroup.globalRules.push({
+              globalRules.push({
                 id: rule.id,
                 name: rule.name || `Global Rule ${rule.id}`,
-                plugins: pluginNames,
+                plugins: pluginNames.length > 0 ? pluginNames : undefined,
               });
+            }
+            
+            if (globalRules.length > 0) {
+              gatewayGroup.globalRules = globalRules;
             }
           }
   
-          if (sslData && sslData.list) {
-            for (const ssl of sslData.list) {
-              gatewayGroup.ssl.push({
-                id: ssl.id,
-                name: ssl.name,
-                common_name: ssl.common_name,
-                exptime: dayjs(ssl?.exptime).format("YYYY-MM-DD HH:mm:ss"),
+          if (sslData && sslData.list && sslData.list.length > 0) {
+            const ssl = [];
+            for (const cert of sslData.list) {
+              // cert.exptime is a Unix timestamp in seconds
+              const exptimeFormatted = cert?.exptime ? dayjs.unix(cert.exptime).format("YYYY-MM-DD HH:mm:ss") : "";
+              
+              ssl.push({
+                id: cert.id,
+                name: cert.name,
+                common_name: cert.common_name,
+                exptime: exptimeFormatted,
               });
+            }
+            
+            if (ssl.length > 0) {
+              gatewayGroup.ssl = ssl;
             }
           }
   
-          if (consumerData && consumerData.list) {
+          if (consumerData && consumerData.list && consumerData.list.length > 0) {
             const consumerPromises = consumerData.list.map(async (consumer: {
               id: string;
               username: string;
               plugins?: Record<string, unknown>;
             }) => {
-              const consumerInfo: Consumer = {
+              const consumerInfo: Partial<Consumer> = {
                 id: consumer.id,
                 name: consumer.username || `Consumer ${consumer.id}`,
-                plugins: consumer.plugins ? Object.keys(consumer.plugins) : [],
-                credentials: []
               };
               
-              // 获取每个 consumer 的 credentials
+              const plugins = consumer.plugins ? Object.keys(consumer.plugins) : [];
+              if (plugins.length > 0) {
+                consumerInfo.plugins = plugins;
+              }
+              
               const credentialsData = await makeAPIRequest({
                 url: `/apisix/admin/consumers/${consumer.username}/credentials`,
                 method: "GET",
@@ -180,37 +196,49 @@ export const fetchResourceOverview = async (): Promise<ResourceOverview | string
                 raw: true,
               });
               
-              if (credentialsData && credentialsData.list) {
-                consumerInfo.credentials = credentialsData.list.map((credential: {
+              if (credentialsData && credentialsData.list && credentialsData.list.length > 0) {
+                const credentials = credentialsData.list.map((credential: {
                   id: string;
                   name: string;
                   plugins: Record<string, unknown>;
                 }) => {
-                  // 只保留 name、id 和插件名称
                   return {
                     id: credential.id,
                     name: credential.name,
-                    plugin: Object.keys(credential.plugins)[0] // 获取第一个插件名称
+                    plugin: Object.keys(credential.plugins)[0] 
                   };
                 });
+                
+                if (credentials.length > 0) {
+                  consumerInfo.credentials = credentials;
+                }
               }
               
               return consumerInfo;
             });
             
-            gatewayGroup.consumer = await Promise.all(consumerPromises);
+            const consumers = await Promise.all(consumerPromises);
+            if (consumers.length > 0) {
+              gatewayGroup.consumer = consumers;
+            }
           }
   
-          return gatewayGroup;
+          return gatewayGroup as GatewayGroup;
         }
       );
   
       const gatewayGroups = await Promise.all(gatewayGroupPromises);
+      const filteredGatewayGroups = gatewayGroups.filter(group => Object.keys(group).length > 2);
   
-      return {
-        gatewayGroups: gatewayGroups,
-        customPlugins: customPlugins,
-      };
+      const result: ResourceOverview = {};
+      if (filteredGatewayGroups.length > 0) {
+        result.gatewayGroups = filteredGatewayGroups;
+      }
+      if (customPlugins.length > 0) {
+        result.customPlugins = customPlugins;
+      }
+      
+      return result;
     } catch (error) {
       return String(error);
     }

@@ -96,9 +96,7 @@ const overviewGuidance = `
 IMPORTANT INSTRUCTION:
 1. First, analyze the resource overview to identify potential risk areas and problematic resources.
 2. Then use the get_resource tool selectively to fetch detailed information ONLY for resources that need further investigation.
-3. Don't fetch all resources at once - this will cause token limits and reduce analysis quality.
-4. If the resource has a large amount of resource overview, ask the user if they want to get a detailed report or just an abbreviated report.
-`;
+3. Don't fetch all resources at once - this will cause token limits and reduce analysis quality.`;
 
 const setupRiskCheckTools = (server: McpServer) => {
   server.tool(
