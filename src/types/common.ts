@@ -125,6 +125,11 @@ export const GetResourceSchema = z.object({
   customPlugin: CustomPluginSchema,
 });
 
+export const GetServiceHealthcheckSchema = z.object({
+  gateway_group_id: IDSchema.describe("The gateway group ID."),
+  service_template_id: IDSchema.describe("The service template ID."),
+}).describe("Pass this parameter to retrieve the health check status of a service's upstream.");
+
 export const SendRequestSchema = z.object({
   requests: z.array(z.object({
     path: z.string().describe("request path"),
