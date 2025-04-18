@@ -6,8 +6,8 @@ export type Node = {
 export type Route = {
   id: string;
   name: string;
-  path: string;
-  method: string;
+  paths: string[];
+  methods: string[];
   plugins?: string[];
 }
 
@@ -22,6 +22,8 @@ export type Upstream = {
 export type Service = {
   id:   string;
   name?: string;
+  path_prefix?: string;
+  hosts?: string[];
   routes?: Route[];
   upstream: Upstream;
 }

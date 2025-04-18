@@ -71,7 +71,7 @@ const prompt = `Here's the translated prompt for invoking the API7-MCP tool to g
 
 #### **Monitoring & Alerts**  
 1. **Abnormal Traffic & Resource Usage**  
-   - Data source: Use get_prometheus_metrics to get real-time/historical metrics (bandwidth, QPS, concurrent requests).  
+   - Data source: Use get_prometheus_metrics tool to get real-time/historical metrics (bandwidth, QPS, concurrent requests).  
    - AI analysis: Identify spikes/drops (e.g., DoS, crawlers) or sustained high resource usage.  
 
 2. **Request Anomalies & Error Trends**  
