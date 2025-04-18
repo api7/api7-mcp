@@ -35,11 +35,7 @@ const prompt = `
 #### **API Access & Rate Limiting Risks**  
 1. **Sensitive API Rate Limiting (Optional)**  
    - Data source: Rate-limiting plugins (e.g., limit-req, limit-count, limit-conn) on routes/services.  
-   - AI analysis: Assess if sensitive APIs have rate-limiting enabled with reasonable thresholds.  
-
-2. **Global Protection Mechanisms (Optional)**  
-   - Data source: Global rule configurations (e.g., IP whitelist/blacklist, block rules).  
-   - AI analysis: Check for foundational protections (e.g., ip-restriction, user-agent-restriction).  
+   - AI analysis: Assess if sensitive APIs have rate-limiting enabled with reasonable thresholds.
 
 3. **Route Conflict Detection**  
    - Data source: All route data.  
@@ -92,7 +88,10 @@ const prompt = `
 │    └── **Recommendation**
 │  
 ├── [Risk Item Name]  
-│    └── ...`;
+│    └── ...
+
+### Resource Overview:
+`;
 
 const setupRiskCheckTools = (server: McpServer) => {
   server.tool(
@@ -118,16 +117,9 @@ const setupRiskCheckTools = (server: McpServer) => {
         content: [
           {
             type: "text",
-            text: prompt ,
+            text: prompt + JSON.stringify(resourceOverview) ,
           },
-          {
-            type: "text",
-            text: `\n Resource Overview: \n${JSON.stringify(
-              resourceOverview,
-              null,
-              2
-            )}`,
-          },
+          
         ],
       };
     }
