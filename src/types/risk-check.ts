@@ -62,6 +62,7 @@ export type GatewayGroup = {
   globalRules?: GlobalRule[];
   ssl?: SSL[];
   consumer?: Consumer[];
+  caCertificate?: SSL[];
 }
 
 export type ResourceOverview = {

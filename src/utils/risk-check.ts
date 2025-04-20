@@ -46,7 +46,7 @@ export const fetchResourceOverview = async (): Promise<
           name: group.name,
         };
 
-        const [servicesData, globalRulesData, sslData, consumerData] =
+        const [servicesData, globalRulesData, sslData, caCertificateData, consumerData] =
           await Promise.all([
             makeAPIRequest({
               url: "/apisix/admin/services",
@@ -68,6 +68,15 @@ export const fetchResourceOverview = async (): Promise<
 
             makeAPIRequest({
               url: "/apisix/admin/certificates",
+              method: "GET",
+              params: {
+                gateway_group_id: group.id,
+              },
+              raw: true,
+            }),
+
+            makeAPIRequest({
+              url: "/apisix/admin/ca_certificates",
               method: "GET",
               params: {
                 gateway_group_id: group.id,
@@ -172,21 +181,38 @@ export const fetchResourceOverview = async (): Promise<
         if (sslData && sslData.list && sslData.list.length > 0) {
           const ssl = [];
           for (const cert of sslData.list) {
-            // cert.exptime is a Unix timestamp in seconds
-            const exptimeFormatted = cert?.exptime
-              ? dayjs.unix(cert.exptime).format("YYYY-MM-DD HH:mm:ss")
-              : "";
+            
 
             ssl.push({
               id: cert.id,
               name: cert.name,
               common_name: cert.common_name,
-              exptime: exptimeFormatted,
+              exptime: cert?.exptime
+              ? dayjs.unix(cert.exptime).format("YYYY-MM-DD HH:mm:ss")
+              : "",
             });
           }
 
           if (ssl.length > 0) {
             gatewayGroup.ssl = ssl;
+          }
+        }
+
+        if(caCertificateData && caCertificateData.list && caCertificateData.list.length > 0) {
+          const caCertificate = [];
+          for (const cert of caCertificateData.list) {
+            caCertificate.push({
+              id: cert.id,
+              name: cert.name,
+              common_name: cert.common_name,
+              exptime: cert?.exptime
+              ? dayjs.unix(cert.exptime).format("YYYY-MM-DD HH:mm:ss")
+              : "",
+            });
+          }
+
+          if (caCertificate.length > 0) {
+            gatewayGroup.caCertificate = caCertificate;
           }
         }
 
