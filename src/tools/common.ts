@@ -1,10 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { GetResourceSchema, SendRequestSchema } from "../types/common.js";
+import { GetResourceSchema, SendRequestSchema, GetServiceHealthcheckSchema } from "../types/common.js";
 import makeAPIRequest from "../request.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import axios, { AxiosError } from "axios";
 import { GATEWAY_SERVER_URL } from "../env.js";
+
 type RequestConfig = z.infer<typeof SendRequestSchema>["requests"][number];
 
 const setupCommonTools = (server: McpServer) => {
@@ -406,7 +407,7 @@ const setupCommonTools = (server: McpServer) => {
       }
 
       for (const res of results) {
-        if (res.isError) {
+        if (res?.isError) {
           return res;
         }
 
@@ -498,6 +499,20 @@ const setupCommonTools = (server: McpServer) => {
       }]
     };
   });
+
+  server.tool(
+    "get_service_healthcheck",
+    "Get the health check status of a service's upstream",
+    GetServiceHealthcheckSchema.shape,
+    async (args) => {
+      const { gateway_group_id, service_template_id } = args;
+      
+      return await makeAPIRequest({
+        url: `/api/gateway_groups/${gateway_group_id}/services/${service_template_id}/healthcheck`,
+        method: "GET",
+      });
+    }
+  );
 };
 
 export default setupCommonTools;

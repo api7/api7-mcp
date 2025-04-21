@@ -116,16 +116,22 @@ const setupMonitoringTools = (server: McpServer) => {
       // Fetch and process all requested metrics
       const results = await Promise.all(
         metricTypesToFetch.map(async (metricType) => {
-          const result = await makeAPIRequest({
-            url: `/api/control_plane/prometheus${requestData[metricType].url}`,
-            params: requestData[metricType].params,
-            raw: true
-          });
-          
-          return {
-            metricType,
-            data: processMetricData(metricType, result.value.data.result),
-          };
+          try {
+            const result = await makeAPIRequest({
+              url: `/api/control_plane/prometheus${requestData[metricType].url}`,
+              params: requestData[metricType].params,
+              raw: true
+            })
+            return {
+              metricType,
+              data: processMetricData(metricType, result.value.data.result),
+            };
+          } catch (error) {
+            return {
+              metricType,
+              data: error,
+            };
+          }
         })
       );
       

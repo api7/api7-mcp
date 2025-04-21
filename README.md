@@ -32,6 +32,10 @@
 
 - `get_prometheus_metrics`: Get Prometheus metrics from API7 Gateway, including status code distribution, request failures, total requests, bandwidth usage, latency, connections, and QPS
 
+### Risk Management
+
+- `check_risk`: Scan API7 resources configurations for security, performance, and compliance risks, then generates a structured report with actionable fixes
+
 ## Configuration in AI Client
 
 ### Prerequisite

@@ -7,7 +7,7 @@ import setupUserTools from "./tools/user.js";
 import setupPermissionPolicyResources from "./resources/permission-policy.js";
 import setupCommonTools from "./tools/common.js";
 import setupMonitoringTools from "./tools/monitoring.js";
-
+import setupRiskCheckTools from "./tools/risk-check.js";
 const server = new McpServer({
   name: "api7-mcp",
   version: "0.0.1",
@@ -19,6 +19,8 @@ setupRoleTools(server);
 setupUserTools(server);
 setupCommonTools(server);
 setupMonitoringTools(server);
+setupRiskCheckTools(server);
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
