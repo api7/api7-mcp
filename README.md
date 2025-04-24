@@ -80,12 +80,45 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
 | Variable             | Description                     |
 | -------------------- | ------------------------------- |
 | `CONTROL_PLANE_URL`  | API7ee control plane server url |
-| `GATEWAY_SERVER_URL` | API7ee data plane server port   |
+| `GATEWAY_SERVER_URL` | API7ee data plane server url   |
 | `TOKEN`              | API7ee Token                    |
 
 ## Conversation Examples
 
-- "Adjust xiaolin's permissions to only view the default gateway group"
-- "Modify xiaolin's permissions to prevent viewing and editing consumer credential resources in any gateway group"
-- "Update xiaolin's permissions to only view gateway groups with tags team: R&D and region: shenzhen"
+### Common Operations
+
+- "Show me the details of the service with ID 'svc123'."
+- "List all routes in the 'prod' gateway group."
+- "Send a GET request to '/status' on the gateway."
+
+### Permission Management
+
+- "Adjust xiaolin's permissions to only view the default gateway group."
+- "Modify xiaolin's permissions to prevent viewing and editing consumer credential resources in any gateway group."
+- "Update xiaolin's permissions to only view gateway groups with labels team: R&D and region: shenzhen."
 - "What permissions does xiaolin currently have?"
+- "Create a new permission policy named 'ReadOnlyConsumers' that only allows viewing consumers."
+- "Attach the 'ReadOnlyConsumers' policy to the 'Auditor' role."
+- "Remove the 'AdminAccess' policy from the 'Intern' role."
+
+### Role Management
+
+- "List all available roles."
+- "Create a new role called 'DevOps'."
+- "Delete the 'TemporaryAccess' role."
+- "Assign the 'DevOps' and 'Monitoring' roles to the user 'johndoe'."
+
+### User Management
+
+- "What roles does the user with ID 'user456' have?"
+- "Find the user ID for the username 'alice'."
+
+### Monitoring
+
+- "Show me the current QPS for the gateway."
+- "Get the latency metrics for the past hour."
+
+### Risk Management
+
+- "Check my API configurations for any security risks."
+- "Generate a risk report for the 'staging' environment."
