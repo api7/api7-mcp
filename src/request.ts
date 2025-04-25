@@ -43,14 +43,13 @@ async function makeAPIRequest({
       processedData = options.handler(processedData);
     }
 
-
     return raw
       ? processedData
       : {
           content: [
             {
               type: "text",
-              text: JSON.stringify( processedData , null, 2),
+              text: JSON.stringify(processedData, null, 2),
             },
           ],
         };
@@ -65,17 +64,26 @@ async function makeAPIRequest({
       );
       if (error.response?.data) {
         try {
-          const stringifiedData = JSON.stringify({
-            error: error.response.data,
-            url,
-            method,
-            data,
-            params,
-            CONTROL_PLANE_URL,
-          });
-          console.error(`Response data: ${stringifiedData}`);
+          const stringifiedData = JSON.stringify(error.response.data, null, 2);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: stringifiedData,
+              },
+            ],
+          } as CallToolResult;
         } catch {
-          console.error(`Response data: [Cannot parse as JSON]`);
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text",
+                text: `Response data: [Cannot parse as JSON]`,
+              },
+            ],
+          } as CallToolResult;
         }
       } else {
         return {
@@ -83,11 +91,15 @@ async function makeAPIRequest({
           content: [
             {
               type: "text",
-              text: JSON.stringify({
-                status: error.response?.status,
-                message: error.message,
-                data: error.response?.data,
-              }, null, 2),
+              text: JSON.stringify(
+                {
+                  status: error.response?.status,
+                  message: error.message,
+                  data: error.response?.data,
+                },
+                null,
+                2
+              ),
             },
           ],
         } as CallToolResult;

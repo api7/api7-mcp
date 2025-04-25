@@ -67,7 +67,8 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
       "command": "node",
       "args": ["your-project-path/dist/index.js"],
       "env": {
-        "CONTROL_PLANE_HOST": "your-api7ee-control-plane-host",
+        "CONTROL_PLANE_URL": "your-api7ee-control-plane-url",
+        "GATEWAY_SERVER_URL":"your-api7ee-gateway-server-url",
         "TOKEN": "your-api7ee-token"
       }
     }
@@ -80,7 +81,7 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
 | Variable             | Description                     |
 | -------------------- | ------------------------------- |
 | `CONTROL_PLANE_URL`  | API7ee control plane server url |
-| `GATEWAY_SERVER_URL` | API7ee data plane server url   |
+| `GATEWAY_SERVER_URL` | API7ee gateway server url       |
 | `TOKEN`              | API7ee Token                    |
 
 ## Conversation Examples
