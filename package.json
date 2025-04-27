@@ -3,6 +3,24 @@
   "name": "api7-mcp",
   "version": "0.0.1",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/api7/api7-mcp.git"
+  },
+  "homepage": "https://github.com/api7/api7-mcp",
+  "keywords": [
+    "apisix",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "api7-mcp"
+  ],
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "api7-mcp": "dist/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && shx chmod +x dist/*.js",

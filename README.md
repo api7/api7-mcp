@@ -42,6 +42,26 @@
 
 Ensure you have API7 Enterprise Edition properly installed and configured.
 
+### Using NPM
+
+Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings:
+
+```json
+{
+  "mcpServers": {
+    "api7-mcp": {
+      "command": "npx",
+      "args": ["-y","api7-mcp"],
+      "env": {
+        "CONTROL_PLANE_URL": "your-api7ee-control-plane-url",
+        "GATEWAY_SERVER_URL":"your-api7ee-gateway-server-url",
+        "TOKEN": "your-api7ee-token"
+      }
+    }
+  }
+}
+```
+
 ### Using Source Code
 
 Clone the repository:
