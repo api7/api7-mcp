@@ -1,10 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { GetResourceSchema, SendRequestSchema, GetServiceHealthcheckSchema } from "../types/common.js";
+import {
+  GetResourceSchema,
+  SendRequestSchema,
+  GetServiceHealthcheckSchema,
+} from "../types/common.js";
 import makeAPIRequest from "../request.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import axios, { AxiosError } from "axios";
-import { GATEWAY_SERVER_URL } from "../env.js";
+import { GATEWAY_URL } from "../env.js";
 
 type RequestConfig = z.infer<typeof SendRequestSchema>["requests"][number];
 
@@ -422,83 +426,101 @@ const setupCommonTools = (server: McpServer) => {
     }
   );
 
-  server.tool("send_request_to_gateway", "Send a request or multiple requests to the API7EE gateway instance", SendRequestSchema.shape, async (args) => {
-    const makeRequest = async (config: RequestConfig) => {
-      try {
-        const response = await axios.request({
-          url: `${GATEWAY_SERVER_URL}${config.path}`,
-          method: config.method,
-          data: config.data,
-          headers: config.headers,
-          timeout: 10000,
-        });
+  server.tool(
+    "send_request_to_gateway",
+    "Send a request or multiple requests to the API7EE gateway instance",
+    SendRequestSchema.shape,
+    async (args) => {
+      const makeRequest = async (config: RequestConfig) => {
+        try {
+          const response = await axios.request({
+            url: `${GATEWAY_URL}${config.path}`,
+            method: config.method,
+            data: config.data,
+            headers: config.headers,
+            timeout: 10000,
+          });
 
-        return {
-          status: response.status,
-          data: response.data,
-          headers: response.headers,
-        };
-      } catch (error) {
-        // handle error
-        const axiosError = error as AxiosError;
-        if (axiosError.response) {
-          // The server responded with an error status code
           return {
-            status: axiosError.response.status,
-            data: axiosError.response.data || { error: 'Request failed' },
-            headers: axiosError.response?.headers || {},
+            status: response.status,
+            data: response.data,
+            headers: response.headers,
           };
-        } else if (axiosError.request) {
-          // The request was sent but no response was received
-          return {
-            status: 503, // Use 503 to indicate service is unavailable
-            data: { error: 'Gateway is not responding' },
-            headers: axiosError.request?.headers || {},
-          };
-        } else {
-          // An error occurred while setting up the request
-          return {
-            status: 500,
-            data: { error: axiosError.message || 'Request error' },
-            headers: axiosError.request?.headers || {},
-          };
-        }
-      }
-    };
-
-    const makeRepeatedRequests = async (config: RequestConfig) => {
-      const repeatCount = config.repeatCount || 1;
-      if (repeatCount > 1) {
-        return Promise.all(Array(repeatCount).fill(null).map(() => makeRequest(config)));
-      } else {
-        return makeRequest(config);
-      }
-    };
-
-    let results = [];
-    results = await Promise.all(args.requests.map(req => makeRepeatedRequests(req)));
-
-
-    // Flatten results if needed and count
-    const flatResults = results.flat();
-    const singleResults = flatResults.filter(r => !Array.isArray(r));
-    const multiResults = flatResults.filter(r => Array.isArray(r)).flat();
-    const allResults = [...singleResults, ...multiResults];
-
-    return {
-      content: [{
-        type: "text" as const,
-        text: JSON.stringify({
-          results: allResults,
-          summary: {
-            total: allResults.length,
-            successful: allResults.filter(r => r.status >= 200 && r.status < 300).length,
-            failed: allResults.filter(r => r.status >= 400).length
+        } catch (error) {
+          // handle error
+          const axiosError = error as AxiosError;
+          if (axiosError.response) {
+            // The server responded with an error status code
+            return {
+              status: axiosError.response.status,
+              data: axiosError.response.data || { error: "Request failed" },
+              headers: axiosError.response?.headers || {},
+            };
+          } else if (axiosError.request) {
+            // The request was sent but no response was received
+            return {
+              status: 503, // Use 503 to indicate service is unavailable
+              data: { error: "Gateway is not responding" },
+              headers: axiosError.request?.headers || {},
+            };
+          } else {
+            // An error occurred while setting up the request
+            return {
+              status: 500,
+              data: { error: axiosError.message || "Request error" },
+              headers: axiosError.request?.headers || {},
+            };
           }
-        }, null, 2)
-      }]
-    };
-  });
+        }
+      };
+
+      const makeRepeatedRequests = async (config: RequestConfig) => {
+        const repeatCount = config.repeatCount || 1;
+        if (repeatCount > 1) {
+          return Promise.all(
+            Array(repeatCount)
+              .fill(null)
+              .map(() => makeRequest(config))
+          );
+        } else {
+          return makeRequest(config);
+        }
+      };
+
+      let results = [];
+      results = await Promise.all(
+        args.requests.map((req) => makeRepeatedRequests(req))
+      );
+
+      // Flatten results if needed and count
+      const flatResults = results.flat();
+      const singleResults = flatResults.filter((r) => !Array.isArray(r));
+      const multiResults = flatResults.filter((r) => Array.isArray(r)).flat();
+      const allResults = [...singleResults, ...multiResults];
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                results: allResults,
+                summary: {
+                  total: allResults.length,
+                  successful: allResults.filter(
+                    (r) => r.status >= 200 && r.status < 300
+                  ).length,
+                  failed: allResults.filter((r) => r.status >= 400).length,
+                },
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+  );
 
   server.tool(
     "get_service_healthcheck",
@@ -506,7 +528,7 @@ const setupCommonTools = (server: McpServer) => {
     GetServiceHealthcheckSchema.shape,
     async (args) => {
       const { gateway_group_id, service_template_id } = args;
-      
+
       return await makeAPIRequest({
         url: `/api/gateway_groups/${gateway_group_id}/services/${service_template_id}/healthcheck`,
         method: "GET",

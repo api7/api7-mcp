@@ -9,7 +9,7 @@ import {
   AttachPermissionPolicyToRoleSchema,
   DetachPermissionPolicyFromRoleSchema,
 } from "../types/permission-policy.js";
-import { CONTROL_PLANE_URL } from "../env.js";
+import { DASHBOARD_URL } from "../env.js";
 
 const setupPermissionPolicyTools = (server: McpServer) => {
   server.tool(
@@ -19,9 +19,18 @@ const setupPermissionPolicyTools = (server: McpServer) => {
     async (args) => {
       const policyId = args.id;
       if (policyId) {
-        return await makeAPIRequest({url: `/api/permission_policies/${policyId}`, method: "GET"});
+        return await makeAPIRequest({
+          url: `/api/permission_policies/${policyId}`,
+          method: "GET",
+        });
       } else {
-        return await makeAPIRequest({url: `/api/permission_policies?search=${args.search}`, method: "GET"});
+        return await makeAPIRequest({
+          url: `/api/permission_policies`,
+          method: "GET",
+          params: {
+            search: args.search,
+          },
+        });
       }
     }
   );
@@ -47,14 +56,18 @@ const setupPermissionPolicyTools = (server: McpServer) => {
           ],
         };
       }
-      return await makeAPIRequest({url: "/api/permission_policies", method: "POST", data: args.permissionPolicy, options: {
+      return await makeAPIRequest({
+        url: "/api/permission_policies",
+        method: "POST",
+        data: args.permissionPolicy,
+        options: {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_URL}/policies/${data.value.id}`,
+              console_url: `${DASHBOARD_URL}/policies/${data.value.id}`,
             };
           },
-        }
+        },
       });
     }
   );
@@ -74,14 +87,18 @@ const setupPermissionPolicyTools = (server: McpServer) => {
           ],
         };
       }
-      return await makeAPIRequest({url: `/api/permission_policies/${args.id}`, method: "PUT", data: args.permissionPolicy, options: {
+      return await makeAPIRequest({
+        url: `/api/permission_policies/${args.id}`,
+        method: "PUT",
+        data: args.permissionPolicy,
+        options: {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_URL}/policies/${data.value.id}`,
+              console_url: `${DASHBOARD_URL}/policies/${data.value.id}`,
             };
           },
-        }
+        },
       });
     }
   );
@@ -91,7 +108,10 @@ const setupPermissionPolicyTools = (server: McpServer) => {
     "Delete a permission policy",
     DeletePermissionPolicySchema.shape,
     async (args) => {
-      return await makeAPIRequest({url: `/api/permission_policies/${args.id}`, method: "DELETE"} );
+      return await makeAPIRequest({
+        url: `/api/permission_policies/${args.id}`,
+        method: "DELETE",
+      });
     }
   );
 
@@ -100,7 +120,10 @@ const setupPermissionPolicyTools = (server: McpServer) => {
     "Get permission policy details by role id",
     GetPermissionPolicyByRoleSchema.shape,
     async (args) => {
-      return await makeAPIRequest({url: `/api/roles/${args.id}/permission_policies`, method: "GET"});
+      return await makeAPIRequest({
+        url: `/api/roles/${args.id}/permission_policies`,
+        method: "GET",
+      });
     }
   );
 
@@ -109,14 +132,18 @@ const setupPermissionPolicyTools = (server: McpServer) => {
     "Attach permission policy to role",
     AttachPermissionPolicyToRoleSchema.shape,
     async (args) => {
-      return await makeAPIRequest({url: `/api/roles/${args.id}/attach_permission_policies`, method: "POST", data: args.permissionPolicyId, options: {
+      return await makeAPIRequest({
+        url: `/api/roles/${args.id}/attach_permission_policies`,
+        method: "POST",
+        data: args.permissionPolicyId,
+        options: {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_URL}/roles/${args.id}/detail`,
+              console_url: `${DASHBOARD_URL}/roles/${args.id}/detail`,
             };
           },
-        }
+        },
       });
     }
   );
@@ -126,14 +153,18 @@ const setupPermissionPolicyTools = (server: McpServer) => {
     "Detach permission policy from role",
     DetachPermissionPolicyFromRoleSchema.shape,
     async (args) => {
-      return await makeAPIRequest({url: `/api/roles/${args.id}/detach_permission_policies`, method: "POST", data: args.permissionPolicyId, options: {
+      return await makeAPIRequest({
+        url: `/api/roles/${args.id}/detach_permission_policies`,
+        method: "POST",
+        data: args.permissionPolicyId,
+        options: {
           handler: (data) => {
             return {
               ...data,
-              console_url: `${CONTROL_PLANE_URL}/roles/${args.id}/detail`,
+              console_url: `${DASHBOARD_URL}/roles/${args.id}/detail`,
             };
           },
-        }
+        },
       });
     }
   );

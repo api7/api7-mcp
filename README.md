@@ -53,8 +53,8 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
       "command": "npx",
       "args": ["-y","api7-mcp"],
       "env": {
-        "CONTROL_PLANE_URL": "your-api7ee-control-plane-url",
-        "GATEWAY_SERVER_URL":"your-api7ee-gateway-server-url",
+        "DASHBOARD_URL": "your-api7ee-dashboard-url",
+        "GATEWAY_URL":"your-api7ee-gateway-server-url",
         "TOKEN": "your-api7ee-token"
       }
     }
@@ -87,22 +87,14 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
       "command": "node",
       "args": ["your-project-path/dist/index.js"],
       "env": {
-        "CONTROL_PLANE_URL": "your-api7ee-control-plane-url",
-        "GATEWAY_SERVER_URL":"your-api7ee-gateway-server-url",
+        "DASHBOARD_URL": "your-api7ee-dashboard-url",
+        "GATEWAY_URL":"your-api7ee-gateway-server-url",
         "TOKEN": "your-api7ee-token"
       }
     }
   }
 }
 ```
-
-## Environment Variables
-
-| Variable             | Description                     |
-| -------------------- | ------------------------------- |
-| `CONTROL_PLANE_URL`  | API7ee control plane server url |
-| `GATEWAY_SERVER_URL` | API7ee gateway server url       |
-| `TOKEN`              | API7ee Token                    |
 
 ## Conversation Examples
 
